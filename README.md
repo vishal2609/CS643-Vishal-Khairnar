@@ -20,25 +20,33 @@ The pipeline consists of the following AWS services:
 2. **AWS CLI Installed** ([Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)).
 3. **Amazon Linux EC2 Instances** with `t2.micro` (Free Tier).
 4. **AWS SDK** for the chosen programming language (Python, Java, Node.js, etc.).
-5. **IAM Role for AWS Services** to allow access to S3, SQS, and Rekognition.
-6. **Security Group** allowing SSH, HTTP, and HTTPS (restricted SSH to my IP).
+5. **Security Group** allowing SSH, HTTP, and HTTPS (restricted SSH to my IP).
 
 ## Setup Instructions
 
 ### 1. Launched EC2 Instances
 - Launched **two EC2 instances** (Amazon Linux AMI).
 - Assigned the same **.pem key** to both instances.
-- Attached an **IAM role** with permissions for S3, SQS, and Rekognition.
 
-### 2. Configured AWS IAM Role
-Since I used an **IAM role** instead of manually configuring credentials, my instances automatically authenticated with AWS services.  
-To verify, I ran:
+### 2. Configured AWS Credentials
+For an **AWS Educate** account, I retrieved credentials via **Vocareum** and updated `~/.aws/credentials`:
 
 ```bash
-aws sts get-caller-identity
+mkdir -p ~/.aws
+nano ~/.aws/credentials
 ```
 
-This confirmed my instance had the correct permissions.
+Added:
+
+```ini
+[default]
+aws_access_key_id = YOUR_ACCESS_KEY
+aws_secret_access_key = YOUR_SECRET_KEY
+aws_session_token = YOUR_SESSION_TOKEN  # (Required for AWS Educate)
+region = us-east-1
+```
+
+For a **standard AWS account**, I followed [this guide](https://docs.aws.amazon.com/rekognition/latest/dg/setup-awscli-sdk.html).
 
 ### 3. Set Up S3 Bucket
 - The dataset was hosted at: `https://njit-cs-643.s3.us-east-1.amazonaws.com`
