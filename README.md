@@ -1,5 +1,3 @@
-# CS643-Vishal-Khairnar
-
 # AWS Image Recognition Pipeline
 
 ## Overview
@@ -22,7 +20,7 @@ The pipeline consists of the following AWS services:
 2. **AWS CLI Installed** ([Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)).
 3. **Amazon Linux EC2 Instances** with `t2.micro` (Free Tier).
 4. **AWS SDK** for the chosen programming language (Python, Java, Node.js, etc.).
-5. **IAM Role with permissions** for S3, Rekognition, and SQS.
+5. **IAM Role for AWS Services** to allow access to S3, SQS, and Rekognition.
 6. **Security Group** allowing SSH, HTTP, and HTTPS (restricted SSH to my IP).
 
 ## Setup Instructions
@@ -32,53 +30,43 @@ The pipeline consists of the following AWS services:
 - Assigned the same **.pem key** to both instances.
 - Attached an **IAM role** with permissions for S3, SQS, and Rekognition.
 
-### 2. Configured AWS Credentials
-For an **AWS Educate** account, I retrieved credentials via **Vocareum** and updated `~/.aws/credentials`:
+### 2. Configured AWS IAM Role
+Since I used an **IAM role** instead of manually configuring credentials, my instances automatically authenticated with AWS services.  
+To verify, I ran:
 
-\`\`\`bash
-mkdir -p ~/.aws
-nano ~/.aws/credentials
-\`\`\`
+```bash
+aws sts get-caller-identity
+```
 
-Added:
-
-\`\`\`ini
-[default]
-aws_access_key_id = YOUR_ACCESS_KEY
-aws_secret_access_key = YOUR_SECRET_KEY
-aws_session_token = YOUR_SESSION_TOKEN  # (Required for AWS Educate)
-region = us-east-1
-\`\`\`
-
-For a **standard AWS account**, I followed [this guide](https://docs.aws.amazon.com/rekognition/latest/dg/setup-awscli-sdk.html).
+This confirmed my instance had the correct permissions.
 
 ### 3. Set Up S3 Bucket
 - The dataset was hosted at: `https://njit-cs-643.s3.us-east-1.amazonaws.com`
 - To copy images locally, I ran:
 
-\`\`\`bash
+```bash
 aws s3 cp s3://njit-cs-643 ./images --recursive
-\`\`\`
+```
 
 ### 4. Set Up SQS Queue
 - Created an SQS queue in AWS Console.
 - Retrieved its **queue URL** and **ARN**.
 
-\`\`\`bash
+```bash
 aws sqs create-queue --queue-name ImageProcessingQueue
-\`\`\`
+```
 
 ### 5. Installed Dependencies
 For **Python**:
-\`\`\`bash
+```bash
 sudo yum install python3 -y
 pip3 install boto3
-\`\`\`
+```
 
 For **Java**:
-\`\`\`bash
+```bash
 sudo yum install java-1.8.0-openjdk-devel -y
-\`\`\`
+```
 
 ### 6. Deployed Code on EC2 Instances
 
@@ -89,9 +77,9 @@ sudo yum install java-1.8.0-openjdk-devel -y
 
 Ran:
 
-\`\`\`bash
+```bash
 python3 car_recognition.py
-\`\`\`
+```
 
 #### EC2 B: Text Recognition Service
 - Read image indexes from SQS.
@@ -101,17 +89,17 @@ python3 car_recognition.py
 
 Ran:
 
-\`\`\`bash
+```bash
 python3 text_recognition.py
-\`\`\`
+```
 
 ### 7. Terminated and Cleaned Up
 To avoid charges, I **terminated my EC2 instances** and **deleted the SQS queue**:
 
-\`\`\`bash
+```bash
 aws sqs delete-queue --queue-url YOUR_QUEUE_URL
 aws ec2 terminate-instances --instance-ids INSTANCE_ID
-\`\`\`
+```
 
 ## Running the Application
 Once both instances were running, the processing pipeline worked as follows:
@@ -121,10 +109,10 @@ Once both instances were running, the processing pipeline worked as follows:
 4. The final output file contained **image indexes with both cars and text**.
 
 ## Output Example
-\`\`\`
+```bash
 Detected cars in images: ['2.jpg', '5.jpg', '9.jpg']
 Recognized text:
 2.jpg: "New Jersey 123ABC"
 5.jpg: "Parking Lot B"
 9.jpg: "Speed Limit 55"
-\`\`\`
+```
