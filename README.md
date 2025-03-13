@@ -31,7 +31,7 @@ For an **AWS Educate** account, I retrieved credentials via **Vocareum** and upd
 
 ```bash
 mkdir -p ~/.aws
-nano ~/.aws/credentials
+vi ~/.aws/credentials
 ```
 
 Added:
@@ -44,22 +44,18 @@ aws_session_token = YOUR_SESSION_TOKEN  # (Required for AWS Educate)
 region = us-east-1
 ```
 
-For a **standard AWS account**, I followed [this guide](https://docs.aws.amazon.com/rekognition/latest/dg/setup-awscli-sdk.html).
 
-### 3. Set Up S3 Bucket
+
+### 3. S3 Bucket
 - The dataset was hosted at: `https://njit-cs-643.s3.us-east-1.amazonaws.com`
-- To copy images locally, I ran:
 
-```bash
-aws s3 cp s3://njit-cs-643 ./images --recursive
-```
 
 ### 4. Set Up SQS Queue
 - Created an SQS queue in AWS Console.
 - Retrieved its **queue URL** and **ARN**.
 
 ```bash
-aws sqs create-queue --queue-name ImageProcessingQueue
+aws sqs create-queue --queue-name CS643-car-image-queue
 ```
 
 ### 5. Installed Dependencies
@@ -69,10 +65,7 @@ sudo yum install python3 -y
 pip3 install boto3
 ```
 
-For **Java**:
-```bash
-sudo yum install java-1.8.0-openjdk-devel -y
-```
+
 
 ### 6. Deployed Code on EC2 Instances
 
