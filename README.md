@@ -16,11 +16,9 @@ The pipeline consists of the following AWS services:
 6. **Output**: Generated a file containing indexes of images with cars and recognized text.
 
 ## Prerequisites
-1. **AWS Account** (Standard or AWS Educate).
-2. **AWS CLI Installed** ([Guide](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)).
-3. **Amazon Linux EC2 Instances** with `t2.micro` (Free Tier).
-4. **AWS SDK** for the chosen programming language (Python, Java, Node.js, etc.).
-5. **Security Group** allowing SSH, HTTP, and HTTPS (restricted SSH to my IP).
+1. **Amazon Linux EC2 Instances** with `t2.micro` (Free Tier).
+2. **AWS SDK** chosen programming language Python.
+3. **Security Group** allowing SSH, HTTP, and HTTPS (restricted SSH to my IP).
 
 ## Setup Instructions
 
